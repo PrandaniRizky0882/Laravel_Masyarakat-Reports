@@ -1,49 +1,59 @@
 @extends('layout/app')
 @section('content')
-<!-- @auth
-<p>Peduli Diri, Hai- <b>{{ Auth::user()->name }}</b></p>
-@endauth -->
-<div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="flex items-center justify-end mt-4">
-            <a href="{{ route('masyarakat.create') }}" class="btn btn-success">
-                        <i class="fa fa-pencil mr-5"></i> Tulis Laporan</a>
-        </div>
-        
-        <hr>
-        <div class="bg-black overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-blue-900">
+    <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <a href="{{ route('masyarakat.create') }}" class="btn btn-success">
+                    <i class="fa fa-plus"></i> Tulis Laporan</a>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table id="example2" class="table table-bordered table-hover">
+                  <thead>
+                  <tr>
+                    <th>Tanggal Pengaduan</th>
+                    <th>Nik</th>
+                    <th>Status</th>
+                    <th>More</th>
+                  </tr>
+                  </thead>
+                  <tbody>
                   @foreach ($pengaduan as $data )
-                    <div class="flex justify-between">
-                        <div class="flex justify-start">
-                                <p>Tanggal Pengaduan : <?= $data->tgl_pengaduan ?></p>
-                                <p>Nik: <?= $data->nik ?></p>
-                                <?php if ($data->status == 0) : ?>
-                                <p>Belum diproses</p>
-                                <?php elseif ($data->status == 'proses') : ?>
-                                <p>Sedang diproses</p>
-                                <?php elseif ($data->status == 'selesai') : ?>
-                                <p>Selsai diproses</p>
-                                <?php endif ; ?>
-                        </div> 
-
-                        <div class="flex items-center justify-end mt-4">
-                        
-                        <a class="btn btn-primary" href="{{ route('masyarakat.show', $data->id_pengaduan) }}">Detail</a>
-                        <a href="masyarakat/{{ $data->id_pengaduan }}/edit" class="btn btn-success"><i class="fa fa-pencil"></i></a>
-                        <br></br>
-                        <form action="/masyarakat/{{$data->id_pengaduan}}" method="post">
+                  <tr>
+                    <td><?= $data->tgl_pengaduan ?></td>
+                    <td><?= $data->nik ?></td>
+                    <?php if ($data->status == 0) : ?>
+                    <td>Belum diproses</td>
+                    <?php elseif ($data->status == 'proses') : ?>
+                    <td>Sedang diproses</td>
+                    <?php elseif ($data->status == 'selesai') : ?>
+                    <td>Selsai diproses</td>
+                    <?php endif ; ?>
+                    <td>
+                    <form action="{{ route('masyarakat.delete', $data->id_pengaduan) }}" method="post">
                             @method('delete')
                             @csrf
-                            <button type="submit"   onclick="alert('Data Telah dihapus! ')"class="btn btn-danger plus mr-auto"><i class="fa fa-trash"></i></button>
+                            <a class="btn btn-primary" href="{{ route('masyarakat.show', $data->id_pengaduan) }}">Detail</a>
+                            <button type="submit"   onclick="alert('Laporan berhasil ditarik!')"class="btn btn-danger plus mr-auto">Unsend</button>
                         </form>
-                        </div>
-                        <hr>
-                        </div>
-                    </div>
-                  @endforeach  
-                </div>
+                    </td>
+                  </tr>
+                  @endforeach
+                  </tbody>
+                  <tfoot>
+                  <tr>
+                    <th>Tanggal Pengaduan</th>
+                    <th>Nik</th>
+                    <th>Status</th>
+                    <th>More</th>
+                  </tr>
+                  </tfoot>
+                </table>
+              </div>
             </div>
+          </div>
         </div>
-    </div>
+      </div>
 @endsection

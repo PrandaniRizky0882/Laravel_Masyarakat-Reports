@@ -6,36 +6,41 @@ use App\Models\Pengaduan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Codedge\Fpdf\Fpdf\Fpdf;
 
 
 class PengaduanController extends Controller
 {
+
+    protected $fpdf;
+
+    public function __construct()
+    {
+        $this->fpdf = new Fpdf;
+    }
+
     public function index() {
+        $data = array('title' => 'Dashboard');
         $pengaduan = Pengaduan::all();
-        return view('masyarakat.dashboard', compact('pengaduan'));
+        return view('masyarakat.dashboard',$data, compact('pengaduan'));
     }
 
     public function create() {
 
-        return view('masyarakat.create');
+        $data = array('title' => 'Create Reports');
+        return view('masyarakat.create',$data);
     }
 
     public function show($id) {
 
-        // $pengaduan = Pengaduan::find($id);
-        
-        // // cara kedua
-        // // $kiki = Pengaduan::all();
-
-        // // $pengaduans = $kiki->find($id);
-
-        // return view('masyarakat.show', compact('pengaduan'));
+        $data = array('title' => 'Detail');
         $pengaduan = DB::table('pengaduans')->where('id_pengaduan',$id)->first();
-        return view('masyarakat.show', compact('pengaduan'));
+        return view('masyarakat.show',$data, compact('pengaduan'));
     }
 
     public function store(Request $request) {
 
+       
         $this->validate($request, [
             'id_pengaduan'      => 'max:15',
             'tgl_pengaduan'     => 'required',
@@ -51,7 +56,6 @@ class PengaduanController extends Controller
         $image->storeAs('public/images', $image->hashName());
         
         //create post
-        
         Pengaduan::create([
             'id_pengaduan'      => $request->id_pengaduan,
             'tgl_pengaduan'     => $request->tgl_pengaduan,
@@ -61,48 +65,7 @@ class PengaduanController extends Controller
             'status',
         ]);
 
-
-        // Pengaduan::create([
-        //     'id_pengaduan'      => $request->id_pengaduan,
-        //     'tgl_pengaduan'     => $request->tgl_pengaduan,
-        //     'nik'               => $request->nik,
-        //     'foto'              => $image->hasName(),
-        //     'isi_laporan'       => $request->isi_laporan,
-        //     'status',
-        // ]);
-
-        // $file = $request->file('foto');
-
         
-        // // lokasi menyimpan folder foto di public dengan folder data_file
-        // $file->move('data_files',$file->getClientOriginalName());
-/**
- * cara pertama masih sama
- */
-        // $imageName = time().'.'.$request->foto->extension();
-        // $uploadedImage = $request->foto->move(public_path('data_files'), $imageName);
-        // $imagePath = 'data_files/' . $imageName;
-        
-        // if ($pengaduan = Pengaduan::create()) {
-        //     $pengaduan->foto = $imagePath;
-        //     $pengaduan->save();
-        // }
-
- /**
-* cara kedua masih sama dan error pada field tgl_pengaduan[duplicate]
-*/
-        // if($request->hasFile('foto')){
-        //     $resorce = $request->file('foto');
-    
-        //     $name   = $resorce->getClientOriginalName();
-        //     // lokasi menyimpan folder foto di public dengan folder data_file
-        //     $resorce->move(\base_path() ."/public/images", $name);
-        //     $save = DB::table('pengaduans')->insert(['foto' => $name]);
-    
-        //     }
-
-        
-
         return redirect()->route('masyarakat.dashboard');
     
       }
@@ -134,42 +97,18 @@ class PengaduanController extends Controller
             $image = $request->file('foto');
             $image->storeAs('public/images', $image->hashName());
 
-            
-            DB::table('pengaduans')->where('id_pengaduan',$id)->update([
+
+             DB::table('pengaduans')->where('id_pengaduan',$id)->update([
                 'tgl_pengaduan'             => $request->tgl_pengaduan,
                 'nik'                       => $request->nik,
                 'isi_laporan'               => $request->isi_laporan,
                 'foto'                      => $image->hashName(),
             ]);
 
-            // mengambil data lama
-            // $pengaduan = Pengaduan::where('id_pengaduan', $id)->first();
+            // hapus foto lama
 
-            // $fotolama  = public_path('public/images/'. $pengaduan->foto);
-
-            // File::delete($fotoLama);
-
-
-
-            // // // menghapus data lama
-            // Storage::delete('public/images/'. $pengaduan->foto);
             
-
-
-            // $pengaduan = Pengaduan::find($id);
-            // $pengaduan->tgl_pengaduan                   = $request->tgl_pengaduan;
-            // $pengaduan->nik                             = $request->nik;
-            // $pengaduan->isi_laporan                     = $request->isi_laporan;
-            // $pengaduan->foto                            = $image->hashName();
-
-            // $pengaduan->save();
-
-            // $pengaduan->update([
-            //     'tgl_pengaduan'     => $request->tgl_pengaduan,
-            //     'nik'               => $request->nik,
-            //     'foto'              => $image->hashName(),
-            //     'isi_laporan'       => $request->isi_laporan,
-            // ]);
+            // Storage::
 
         } else {
 
@@ -189,13 +128,68 @@ class PengaduanController extends Controller
     }
 
     public function delete($id) {
-        // $pengaduan = Pengaduan::find($id);
-        // $pengaduan->delete();
+
         $pengaduan = DB::table('pengaduans')->where('id_pengaduan',$id)->delete();
 
-        return redirect('masyarakat.dashboard');
+        return redirect()->route('masyarakat.dashboard');
     }
 
+    public function cetak() {
+        $this->fpdf->SetFont('Times', 'B', 15);
+        $this->fpdf->AddPage();
+        $this->fpdf->Cell(0, 10,"Pengaduan Masyarakat",0,"","C");
+        $this->fpdf->Ln();
+        $this->fpdf->Cell(80);
+        $this->fpdf->Cell(30,10,'Dusun | Mekar Sari',0,0,'C');       
+        
+        $this->fpdf->Ln();
+        $this->fpdf->Ln();
+
+        $this->fpdf->SetFont('Times','B', 12);
+        $this->fpdf->Cell(30,8,"Nik",1,"","C");
+        $this->fpdf->Cell(70,8,"Laporan",1,"","C");
+        $this->fpdf->Cell(25,8,"Tanggal",1,"","C");
+        $this->fpdf->Cell(25,8,"Status",1,"","C");
+        $this->fpdf->Cell(45,8,"Foto",1,"","C");
+
+
+        $this->fpdf->Ln();
+
+        $pengaduan = Pengaduan::all();
+        foreach ($pengaduan as $data) {
+            $this->fpdf->Cell(30,8,$data->nik,1,"","C");
+            $this->fpdf->Cell(70,8,$data->isi_laporan,1,"","C");
+            $this->fpdf->Cell(25,8,$data->tgl_pengaduan,1,"","C");
+            $this->fpdf->Cell(25,8,$data->status,1,"","C");
+            // $this->fpdf->Image('Storage/images/'.$data->foto,150,30,25,25);
+            
+            $this->fpdf->Ln();
+
+        }
+        
+
+
+        $this->fpdf->Output();
+
+        exit;
+    }
+
+
+    // public function cetak_gambar($id) {
+
+    //     $this->fpdf->AddPage();
+    //     $this->fpdf->Ln();
+
+
+    //     $pengaduan = Pengaduan::findOrFail($id);
+    //     $this->fpdf->Image('Storage/images/'.$pengaduan->foto,150,30,25,25);
+
+    //     $this->fpdf->Output();
+        
+
+
+    // }
+    
 }
 
 

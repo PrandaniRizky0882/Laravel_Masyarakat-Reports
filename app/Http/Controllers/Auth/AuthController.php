@@ -7,26 +7,36 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Masyarakat;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
     public function register() 
-    {
-        return view('auth.register');
+    {   
+        $data = array('title' => 'Register');
+        return view('auth.register',$data);
     }
 
     public function register_action(Request $request) 
     {
         $validate = $request->validate([
-            'nama' => 'required', 
-            'username' => 'required', 
-            'password' => 'required|confirmed', 
+            'name'      => 'required', 
+            'username'  => 'required', 
+            'telp'      => 'required', 
+            'password' => 'required',
+            'password_confirm' => 'required|same:password',
         ]);
 
         $user = User::create([
-            'nama' => $request->nama,
-            'username' => $request->username,
-            'password' => Hash::make($request->password)
+            'name'      => $request->name,
+            'username'  => $request->username,
+            'telp'      => $request->telp,
+            'password'  => Hash::make($request->password)
+        ]);
+
+        Masyarakat::create([
+            'nik' => $request->nik,
+            'user_id' =>  $user->id
         ]);
 
         return redirect()->route('login');

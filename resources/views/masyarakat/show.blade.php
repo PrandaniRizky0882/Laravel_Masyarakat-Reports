@@ -2,7 +2,7 @@
 @section('content')
 <body style="background: lightwhite">
 
-    <div class="container mt-5">
+    <div class="container">
         <div class="row">
             <div class="col-md-12">
                 <div class="card border-0 shadow rounded">
@@ -24,7 +24,8 @@
                                     <td>{{ $pengaduan->tgl_pengaduan }}</td>
                                 </tr>
                             </tbody>
-                          </table>  
+                          </table>
+                          <br>  
                           <a class="btn btn-danger" href="{{ route('masyarakat.dashboard') }}">Back</a>
                     </div>
                 </div>
