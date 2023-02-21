@@ -64,13 +64,14 @@ Route::get('/petugas/{id}/edit', [PetugasController::class, 'edit'])->name('petu
 Route::put('/petugas/{id}/edit', [petugasController::class, 'update'])->name('petugas.update');
 Route::delete('/petugas/{id}', [PetugasController::class, 'delete'])->name('petugas.delete');
 
-// tanggapan 
-Route::get('/petugas/tanggapan', [PetugasController::class, 'tanggapan'])->name('petugas.tanggapan');
-
 // cetak fpdf
 Route::get('pdf', [PengaduanController::class, 'cetak'])->name('cetak');
-// Route::get('pdf-gambar', [PengaduanController::class, 'cetak_gambar'])->name('cetak_gambar');
 
+
+// tanggapan 
+Route::get('/tanggapan', [TanggapanController::class, 'index'])->name('tanggapan.dashboard');
+Route::get('/tanggapan/create', [TanggapanController::class, 'create'])->name('tanggapan.create');
+Route::post('/tanggapan/create', [TanggapanController::class, 'store'])->name('tanggapan.store');
 
 
 

@@ -18,7 +18,7 @@
       </a>
     </li>
     <li class="nav-item has-treeview">
-      <a href="{{ route('petugas.tanggapan') }}" class="nav-link">
+      <a href="{{ route('tanggapan.dashboard') }}" class="nav-link">
         <i class="nav-icon fa fa-cog fa-spin fa-3x fa-fw"></i>
         <p>
           Tanggapan

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pengaduan;
-use App\Models\Tanggapan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -78,9 +77,4 @@ class PetugasController extends Controller
         return redirect()->route('petugas.tampil');
     }
 
-    public function tanggapan() {
-
-        $data = array('title' => 'Tanggapan');
-        return view('petugas.tanggapan', $data);
-    }
 }

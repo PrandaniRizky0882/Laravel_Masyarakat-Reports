@@ -175,48 +175,5 @@ class PengaduanController extends Controller
     }
 
 
-    // public function cetak_gambar($id) {
-
-    //     $this->fpdf->AddPage();
-    //     $this->fpdf->Ln();
-
-
-    //     $pengaduan = Pengaduan::findOrFail($id);
-    //     $this->fpdf->Image('Storage/images/'.$pengaduan->foto,150,30,25,25);
-
-    //     $this->fpdf->Output();
-        
-
-
-    // }
     
 }
-
-
-            // jika foto tidak diupdate
-            // $pengaduan = Pengaduan::find($id);
-            // $pengaduan->tgl_pengaduan                   = $request->tgl_pengaduan;
-            // $pengaduan->nik                             = $request->nik;
-            // $pengaduan->isi_laporan                     = $request->isi_laporan;
-            // $pengaduan->foto                            = $image->hashName();
-
-            // $pengaduan->save();
-            //-----------------//
-            // $pengaduan->update([
-            //     'tgl_pengaduan'     => $request->tgl_pengaduan,
-            //     'nik'               => $request->nik,
-            //     'isi_laporan'       => $request->isi_laporan,
-            // ]);
-
-
-                    // return dd($pengaduan);
-
-        // elquent
-        // $pengaduan = Pengaduan::find($id);
-        // $pengaduan->tgl_pengaduan       = $request->tgl_pengaduan;
-        // $pengaduan->nik                 = $request->nik;
-        // $pengaduan->isi_laporan         = $request->isi_laporan;
-        // $pengaduan->foto                = $request->foto;
-        // $pengaduan->status              = $request->status;
-
-        // $pengaduan->save();
